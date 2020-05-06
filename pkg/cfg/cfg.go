@@ -523,7 +523,7 @@ func claimToHeader(claim string) (string, error) {
 	// "Valid names are composed of English letters, digits, hyphens, and possibly underscores"
 	// as per http://nginx.org/en/docs/http/ngx_http_core_module.html#underscores_in_headers
 	for _, r := range `"(),/\:;<=>?@[]{}_.` {
-		claim = strings.ReplaceAll(claim, string(r), "-")
+		claim = strings.Replace(claim, string(r), "-", -1)
 	}
 
 	// The field-name must be composed of printable ASCII characters (i.e., characters)
@@ -540,7 +540,7 @@ func claimToHeader(claim string) (string, error) {
 	claim = Cfg.Headers.ClaimHeader + http.CanonicalHeaderKey(claim)
 	if claim != was {
 		log.Infof("%s.header.claims %s will be forwarded downstream in the Header %s", Branding.CcName, was, claim)
-		log.Debugf("nginx will popultate the variable $auth_resp_%s", strings.ReplaceAll(strings.ToLower(claim), "-", "_"))
+		log.Debugf("nginx will popultate the variable $auth_resp_%s", strings.Replace(strings.ToLower(claim), "-", "_", -1))
 	}
 	// log.Errorf("%s.header.claims %s will be forwarded in the Header %s", Branding.CcName, was, claim)
 	return claim, nil
